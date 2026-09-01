@@ -1,0 +1,11 @@
+services:
+  naukri-updater:
+    build: .
+    container_name: naukri-auto-updater
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data

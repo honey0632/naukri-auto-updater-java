@@ -16,7 +16,7 @@ COPY --from=build /app/target/naukri-auto-updater-0.0.1-SNAPSHOT.jar app.jar
 
 # Resume
 RUN mkdir -p /app/data /app/assets
-COPY src/main/resources/Honey_SDE_Resume_1.pdf /app/assets/Honey_SDE_Resume.pdf
+COPY src/main/resources/Honey_SDE_Resume.pdf /app/assets/Honey_SDE_Resume.pdf
 
 # Virtual display for headed Chromium
 ENV DISPLAY=:99

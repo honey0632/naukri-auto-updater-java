@@ -1,6 +1,6 @@
 services:
   naukri-updater:
-    build: .
+    image: ${IMAGE_NAME:-ghcr.io/honey0632/naukri-auto-updater:latest}
     container_name: naukri-auto-updater
     restart: unless-stopped
     env_file:

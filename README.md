@@ -29,6 +29,18 @@ Playwright browsers may need installation on a new machine:
 2. Run:
    `docker compose up -d --build`
 
+## GitHub Actions
+
+- **CI** runs Maven verification and builds the Docker image for pushes and pull requests.
+- **CD** publishes the Docker image to GitHub Container Registry and deploys it to the
+  Oracle Cloud VM when a `v*.*.*` tag is pushed or the workflow is run manually.
+
+Configure the application environment variables in the deployment platform; `.env`
+is intentionally ignored and is never included in the workflows. For Oracle Cloud,
+create these repository or environment secrets: `OCI_HOST`, `OCI_USERNAME`,
+`OCI_SSH_KEY`, and `OCI_APP_DIR`. The target directory must contain
+`docker-compose.yml` and the production `.env` file.
+
 ## Manual update
 
 POST `/api/update`

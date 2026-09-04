@@ -35,9 +35,11 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.IMAGE_NAME }}
+          # Add an immutable full-SHA tag for the deployment job.
           tags: |
             type=ref,event=tag
             type=sha
+            type=raw,value=${{ github.sha }}
             type=raw,value=latest
 
       - name: Set up Docker Buildx
@@ -84,12 +86,19 @@ jobs:
           script: |
             cd "${{ secrets.OCI_APP_DIR }}"
 
-            export IMAGE_NAME="${{ env.IMAGE_NAME }}:latest"
+            # Deploy the exact image built for this workflow run, not mutable latest.
+            export IMAGE_NAME="${{ env.IMAGE_NAME }}:${{ github.sha }}"
 
             echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io \
               -u "${{ secrets.GHCR_USERNAME }}" \
               --password-stdin
 
+            # Pull and recreate so the VM cannot retain an older application image.
             docker compose pull
-            docker compose up -d --no-build
+            docker compose up -d --no-build --force-recreate --remove-orphans
+
+            # Fail the deployment if the recreated container is not running.
+            docker compose ps
+            test "$(docker inspect -f '{{.State.Status}}' naukri-auto-updater)" = "running"
+
             docker image prune -f

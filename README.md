@@ -8,6 +8,9 @@ profile/resume content.
 - It writes the existing value back unchanged.
 - It does not attempt to bypass CAPTCHA, OTP, MFA, or anti-bot checks.
 - Naukri can change its HTML/UI. Selectors are therefore configurable.
+- The authenticated Playwright session is persisted at
+  `./data/naukri-storage-state.json` by default, so scheduled updates do not
+  log in repeatedly. Treat this file as sensitive and do not commit or share it.
 - Use your own account and comply with Naukri's terms.
 
 ## Run locally
@@ -19,6 +22,9 @@ profile/resume content.
 
 Spring Boot loads the root `.env` file automatically for local runs. Docker
 Compose loads the same file through `env_file`.
+
+The session-state location can be changed with `NAUKRI_STORAGE_STATE_PATH`,
+but it should remain inside the project's persisted `data` directory.
 
 Playwright browsers may need installation on a new machine:
 `mvn exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install chromium"`

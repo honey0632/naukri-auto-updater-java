@@ -76,6 +76,17 @@ jobs:
           target: ${{ secrets.OCI_APP_DIR }}
           overwrite: true
 
+      - name: Copy resume to persisted data directory
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.OCI_HOST }}
+          username: ${{ secrets.OCI_USERNAME }}
+          key: ${{ secrets.OCI_SSH_KEY }}
+          source: src/main/resources/Honey_SDE_Resume.pdf
+          target: ${{ secrets.OCI_APP_DIR }}/data
+          strip_components: 3
+          overwrite: true
+
       - name: Deploy on Oracle Cloud VM
         uses: appleboy/ssh-action@v1.2.2
         with:
